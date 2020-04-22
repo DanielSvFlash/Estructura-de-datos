@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Recursividad</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="estilos.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script type="text/javascript">
+		function fun(val)
+		{
+			//alert(val);
+			var num = $('#txt-num'+val).val();
+			var num2 = $('#txt-num'+val+"-"+2).val();
+			//alert(num+".----."+num2);
+			//Este es la primera condicion de control para ver que me esten dando un valor
+			if(num!='')
+			{
+				//Aqui verifico que el valor que me estan dando es numerico
+				if(!isNaN(num))		
+				{
+					//verifico que la variable val que es la que uso para el control del Switch
+					//Sea entre 2 y 7 que son las funciones que utilizan numeros
+					if((val>2&&val<7)||(val==9)||(val==13))
+					{
+						//Estas son las variables en las que guardo los dos numeros a utilizar
+						num = $('#txt-num'+val).val();
+						num2 = $('#txt-num'+val+"-"+2).val();
+						//Aqui verifico que el vsegundo valor dado sea numerico
+						if (!isNaN(num2)) 
+						{
+							//Para cada un de los elementos mando a llamar la funcion que realiza la accion que se necesita
+							switch(val)
+							{
+								case 3:
+									alert("Potencia: "+potencia(num,num2));
+								break;
+								case 4:
+									alert("Multiplicacion: "+multiplicacion(num,num2));
+								break;
+								case 5:
+									alert("Division: "+division(num,num2));
+								break;
+								case 6:
+									alert("Potencia2: "+potencia2(num,num2));
+								break;
+								case 9:
+									alert("Ciclo for: "+ciclo(num,num2));
+								break;
+								case 13:
+									alert("Division Decimal: "+division(num,num2)+"."+division((parseInt(num)-parseInt(divisionD(num,num2)*num2))*100,num2));
+								break;
+								default:
+									alert("Algo anda mal");
+								break;
+							}
+						}
+					}else
+					{
+						//Este switch es para las funciones que solo necesitan un valor numerico como entrada
+						//Para cada valor del switch mando a llamar la funcion correspondiente
+						switch(val)
+						{
+							case 1:
+								alert("Factorial: "+factorial(num));
+							break;
+							case 2:
+								alert("Sumatoria: "+sumatoria(num));
+							break;
+							case 10:
+								alert("Fibonacci: "+fibonacci(num));
+							break;
+							case 11:
+								hanoi(num,"a","b","c");
+								alert("Hanoi: Finish");
+							break;
+							case 12:
+								alert("Taylor: "+taylor(num));
+							break;
+							default:
+								alert("Algo anda mal");
+							break;
+						}
+					}
+					
+				}else
+				{
+					//Este if es para las funciones que resiven como valor de entrada palabras
+					if(val>6&&val<9)
+					{
+						//Para cada uno de los valores manda a llamar la funcion correspondiente
+						switch(val)
+						{
+							case 7:
+								var texto = num.replace(/ /g,"");
+								alert("Palindromo: "+palindromo(texto,0,texto.length-1));
+							break;
+							case 8:
+								var texto = num.replace(/ /g,"");
+								alert("Invertir: "+invertir(texto,0,texto.length-1));
+							break;
+							default:
+								alert("Algo anda mal");
+							break;
+						}
+					}else
+					{
+						alert("Debes ingresar un valor de texto");
+					}
+				}
+			}else
+			{
+				alert("Debes ingresar un valor");
+			}
+		}
+
+		//A partir de aqui estan todas las funciones recursivas
+		//------------------------------------------------------------------------------------------------------------
+		function factorial(num){
+				if(num==1)
+				{
+					return 1;
+				}else
+				{
+					return num*parseInt(factorial(num-1));
+				}
+		}
+		function sumatoria(num){
+				if(num==1)
+				{
+					return 1;
+				}else
+				{
+					return (parseInt(num)+parseInt(factorial(num-1)));
+				}
+		}
+		function potencia(num1,  num2)
+		{
+			if(num2==0)
+			{
+				return 1;
+			}else
+			{
+				return num1 * potencia(num1,num2-1);
+			}
+		}
+		function multiplicacion(num1, num2)
+		{
+			if(num2==0)
+			{
+				return 0;
+			}else
+			{
+				return (parseInt(num1) + parseInt(multiplicacion(num1,num2-1)));
+			}
+		}
+		function division(num1,num2)
+		{
+			if(parseInt(num1)<parseInt(num2))
+			{
+				return 0;
+			}else
+			{
+				return	(parseInt(1) + parseInt(division(num1-num2,num2)));
+			}
+		}
+		function potencia2(num1,num2)
+		{
+			if(num2==0)
+			{
+				return 1;
+			}else
+			{
+				return multiplicacion(num1 ,potencia(num1,num2-1));
+			}
+		}
+		function palindromo(texto,inicio,fin)
+		{
+			var str =Array.from(texto);
+			//alert(inicio+"----"+fin+"------"+str[inicio]+"---"+str[fin]);
+			if(inicio>=fin)
+			{
+				return "Si es palindromo";
+			}
+			else if(str[inicio]==str[fin])
+			{
+				return palindromo(texto,inicio+1,fin-1)
+			}else
+			{
+				return "No es palindromo";
+			}
+		}
+		function invertir(texto,inicio,fin)
+		{
+			var str = Array.from(texto);
+			var temp;
+			if(inicio>=fin)
+			{
+				return (convierte(str));
+			}else
+			{
+				temp=str[inicio];
+				str[inicio]=str[fin]
+				str[fin]=temp;
+				temp = convierte(str);
+				//alert("Aqui "+temp);
+				return invertir(temp,inicio+1,fin-1);
+			}
+		}
+		function convierte(str)
+		{
+			var res="";
+			for(i=0;i<str.length;i++)
+			{
+				res+=str[i];
+			}
+			//alert("Esto regreso: "+ res);
+			return res;
+		}
+
+		function ciclo(num, num2)
+		{
+			//alert("Si "+num +" es <= a "+num2);
+			if(num<=num2)
+			{
+				console.log(num,"\n");
+				ciclo((parseInt(num)+parseInt(1)),num2);
+			}else{
+				alert("Ciclo terminado");
+				return "Ciclo terminado";
+			}
+		}
+
+		function fibonacci(num)
+		{
+			var temp;
+			//alert(num);
+			if(num ==0)
+			{
+				return 0;
+			}else if(num==1)
+			{
+				return 1;
+			}else{
+				return fibonacci(num-1)+fibonacci(num-2);
+			}
+		}
+
+		function hanoi(torres, posicion, temporal, objetivo)
+		{
+			if(torres==1)
+			{
+				alert("Mover bloque "+ torres +" de "+posicion+" a "+ objetivo);
+			}else{
+				hanoi(torres-1,posicion,objetivo,temporal);
+				alert("Mover bloque "+ torres +" de "+posicion+" a "+ objetivo);
+				hanoi(torres-1,temporal,posicion,objetivo);
+			}
+		}
+		function taylor (num)
+		{
+			if(num == 1)
+			{
+				return 1+"     ";
+			}else{
+			return taylor(num-1)+("x^"+(num-1))+"/"+(num-1)+"!     ";
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="slide1" class="seccion1">
+		<div class="menu">
+			<ul class="submenu">
+				<li class="nav-item" href="index.html">
+					<a href="index.html">Home</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide1">Factorial</a>
+				</li>
+				<li class="nav-item" href="About.html">
+					<a href="#slide2">Sumatoria</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide3">Potencia</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide4">Multiplicacion</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide5">Division</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide6">Potencia2</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide7">Palindromo</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide8">Invertir</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide11">Hanoi</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide9">For</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide10">Fibonacci</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide12">Taylor</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide13">Division Decimal</a>
+				</li>
+				<li class="nav-item">
+					<a href="orden.html">Metodos de Ordenamiento</a>
+				</li>
+			</ul>
+		</div>
+		<div class="menu2">
+			<img src="imagenes/hamburger_icon.png" alt="hamburger_icon">
+			<div class="aparece">
+				<a href="index.html">Home</a>
+				<a href="#slide1">Factorisal</a>
+				<a href="#slide2">Sumatoria</a>
+				<a href="#slide3">Potencia</a>
+				<a href="#slide4">Multiplicacion</a>
+				<a href="#slide5">Division</a>
+				<a href="#slide6">Potencia2</a>
+				<a href="#slide7">Palindromo</a>
+				<a href="#slide8">Invertir</a>
+				<a href="#slide11">Hanoi</a>
+				<a href="#slide9">For</a>
+				<a href="#slide10">Fibonacci</a>
+				<a href="#slide12">Taylor</a>
+				<a href="#slide13">Division Decimal</a>
+				<a href="orden.html">Metodos de Ordenamiento</a>
+			</div>
+		</div>
+		<br><br>
+	</div>
+	<hr width=95% color="#000000" id="slide1">
+	<div id="Factorial">
+		<h1 class="center">Factorial</h1>
+		<div class="center">
+			<h3>Ingrese un numero</h3>
+			<input id="txt-num1" type="text" name="">
+			<input id="btn-factorial" type="button" onclick='fun(1);' name="" value="Factorial">
+		</div>
+	</div>
+	<hr width=95% color="#000000" id="slide2">
+	<br>
+	<div id="Sumatoria">
+		<h1 class="center">Sumatoria</h1>
+		<div class="center">
+			<h3>Ingrese un numero</h3>
+			<input id="txt-num2" type="text" name="">
+			<input id="btn-sumatoria" type="button" onclick="fun(2)" name="" value="Sumatoria">
+		</div>
+	</div>
+
+	<hr width=95% color="#000000" id="slide3">
+	<br>
+	<div id="Potencia">
+		<h1 class="center">Potencia</h1>
+		<div class="center">
+			<h3>Ingrese un numero</h3>
+			<input id="txt-num3" type="text" name="">
+			elevado
+			<input id="txt-num3-2" type="text" name="">
+			<input id="btn-potencia" type="button" onclick="fun(3)" name="" value="Potencia">
+		</div>
+	</div>
+	
+	<hr width=95% color="#000000" id="slide4">
+	<br>
+	<div id="Multiplicacion">
+		<h1 class="center">Multiplicación</h1>
+		<div class="center">
+			<h3>Ingrese un numero</h3>
+			<input id="txt-num4" type="text" name="">
+			multiplicado
+			<input id="txt-num4-2" type="text" name="">
+			<input id="btn-multiplicacion" type="button" onclick="fun(4)" name="" value="Multiplicacion">
+		</div>
+	</div>
+	
+	<hr width=95% color="#000000" id="slide5">
+	<br>
+	<div id="Division">
+		<h1 class="center">Division</h1>
+		<div class="center">
+			<h3>Ingrese un numero</h3>
+			<input id="txt-num5" type="text" name="">
+			dividido
+			<input id="txt-num5-2" type="text" name="">
+			<input id="btn-division" type="button" onclick="fun(5)" name="" value="Division">
+		</div>
+	</div>
+	<hr width=95% color="#000000" id="slide6">
+	<br>
+	<div id="Potencia2">
+		<h1 class="center">Potencia2</h1>
+		<div class="center">
+			<h3>Ingrese un numero</h3>
+			<input id="txt-num6" type="text" name="">
+			elevado
+			<input id="txt-num6-2" type="text" name="">
+			<input id="btn-potencia2" type="button" onclick="fun(6)" name="" value="Potencia2">
+		</div>
+	</div>
+	<hr width=95% color="#000000" id="slide7">
+	<br>
+	<div id="Palindromo">
+		<h1 class="center">Palindromo</h1>
+		<div class="center">
+			<h3>Ingrese una palabra o frase</h3>
+			<input id="txt-num7" type="text" name="">
+			<input id="btn-palindromo" type="button" onclick="fun(7)" name="" value="Palindromo">
+		</div>
+	</div>
+	<hr width=95% color="#000000" id="slide8">
+	<br>
+	<div id="Invertir">
+		<h1 class="center">Invertir</h1>
+		<div class="center">
+			<h3>Ingrese una palabra o frase</h3>
+			<input id="txt-num8" type="text" name="">
+			<input id="btn-invertir" type="button" onclick="fun(8)" name="" value="Invertir">
+		</div>
+	</div>
+	<hr width=95% color="#000000" id="slide9">
+	<br>
+	<div id="Ciclo-For">
+		<h1 class="center">Ciclo For</h1>
+		<div class="center">
+			<h3>Ingrese el inicio y fin del ciclo</h3>
+			desde
+			<input id="txt-num9" type="text" name="">
+			hasta
+			<input id="txt-num9-2" type="text" name="">
+			<input id="btn-ciclo" type="button" onclick="fun(9)" name="" value="Ciclo">
+		</div>
+	</div>
+	<hr width=95% color="#000000" id="slide10">
+	<br>
+	<div id="Fibonacci">
+		<h1 class="center">Fibonacci</h1>
+		<div class="center">
+			<h3>Ingrese el numero de digitos que quiere</h3>
+			<input id="txt-num10" type="text" name="">
+			<input id="btn-fibo" type="button" onclick="fun(10)" name="" value="Fibonacci">
+		</div>
+	</div>
+
+	<hr width=95% color="#000000" id="slide11">
+	<br>
+	<div id="Hanoi">
+		<h1 class="center">Hanoi</h1>
+		<div class="center">
+			<h3>Ingrese la cantidad de bloques</h3>
+			<input id="txt-num11" type="text" name="">
+			<input id="btn-hanoid" type="button" onclick="fun(11)" name="" value="Hanoid">
+		</div>
+	</div>
+
+	<hr width=95% color="#000000" id="slide12">
+	<br>
+	<div id="Taylor">
+		<h1 class="center">Taylor</h1>
+		<div class="center">
+			<h3>Ingrese el numero de terminos</h3>
+			<input id="txt-num12" type="text" name="">
+			<input id="btn-taylor" type="button" onclick="fun(12)" name="" value="Taylor">
+		</div>
+	</div>
+
+	<hr width=95% color="#000000" id="slide13">
+	<br>
+	<div id="DivisionD">
+		<h1 class="center">Division Decimal</h1>
+		<div class="center">
+			<h3>Ingrese el numerador</h3>
+			<input id="txt-num13" type="text" name="">
+			denominador
+			<input id="txt-num13-2" type="text" name="">
+			<input id="btn-taylor" type="button" onclick="fun(13)" name="" value="DivisionD">
+		</div>
+	</div>
+
+	<br><br><br>
+	<div class="footer">
+		copyright 2020
+	</div>
+</body>
+</html>

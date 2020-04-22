@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Buscar</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="estilos.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script type="text/javascript">
+		function fun(val)
+		{
+			//aqui es donde guardo los valores ingresados en variables para poder manejarlos
+			var num = $('#txt-num'+val).val();
+			var num2 = $('#txt-num'+val+"-"+2).val();
+			//Condicion para poder verificar que insertaron un valor
+			if(num!=""&&num2!="")
+			{
+				//Condicion para verificar si los valores ingresados son alfabeticos
+				if(isNaN(num)&&isNaN(num2))
+				{
+					//este arreglo separa todo el parrafo para que sea más facil la comparación
+					var array = Array.from(num);
+					//alert("aqui mero caguamero");
+					//switch para ver cual es la funcion que se debe ejecutar
+					switch(val)
+					{
+						//BOYER MOORE
+						case 1:
+							//Aqui mando a llamar la funcion enviandole el arreglo del parrafo de palabras y luego le mando el valor que estoy buscando
+							var boy = boyer(array,num2);
+							alert("Este es el resultado arrojado por Boyer Moore: "+boy);
+							if(boy!=-1)
+							{
+								alert(imprimir(array, boy, num2.length).toString().replace(/,/g, ''));
+							}
+						break;
+						//KMP
+						case 2:
+							//Aqui mando a llamar la funcion enviandole el arreglo del parrafo de palabras y luego le mando el valor que estoy buscando
+							var kmp = KMP(num,num2);
+							alert("Este es el resultado de KMP: "+kmp);
+							if(kmp!=1)
+							{
+								alert(imprimir(array, kmp, num2.length).toString().replace(/,/g, ''));
+							}
+						break;
+						//NAIVE
+						case 3:
+						//Aqui mando a llamar la funcion enviandole el arreglo del parrafo de palabras y luego le mando el valor que estoy buscando
+							var num3 = $('#txt-num'+val+"-"+3).val();
+							var sar =searchandreplace(array,num2,num3);
+							alert("Este es el resultado de Buscar y reemplazar: "+ sar.toString().replace(/,/g, ''));
+							$('#txt-num3').val(sar.toString().replace(/,/g, ''));
+						break;
+						//CASO DEFAULT
+						default:
+						alert("Algo anda mal");
+						break;
+					}
+				}else
+				{
+					alert("Debes ingresar valores tipo string");
+				}
+			}else
+			{
+				alert("Debes llenar ambos campos");
+			}
+		}
+
+		//Funcion para imprimir todo el arreglo con la palabra buscada en mayusculas
+		function imprimir(array, posicion, long)
+		{
+			//variables necesarias para la funcion
+			var res=[""];
+			var y=0;
+			var cont=0;
+			//ciclo para recorrer todo el arreglo
+			while(y<array.length)
+			{
+				//Condicion para verificar si nos encontramos en la posicion de la parabra
+				//alert("y= "+y+" posicion[cont]= "+posicion[cont]);
+				if(y>=posicion[cont]&&y<=(posicion[cont]+long))
+				{
+					var temp=y;
+					//Ciclo para cambiar la palabra a mayusculas
+					while(y<temp+long)
+					{
+						res[y]=array[y].toUpperCase();
+						y++
+					}
+					y--;
+					cont++;
+				//Si no es la palabra que buscamos, se deja igual
+				}else
+				{
+					res[y]=array[y];
+				}
+				y++;
+			}
+			return res;
+		}
+
+
+		//Funcion sacada de internet
+		function boyer(haystack,needle)
+		{
+			//Variables necesarias para la funcion
+			var badMatchTable = {};
+		    var maxOffset = haystack.length - needle.length;
+		    var offset = 0;
+		    var last = needle.length - 1;
+		    var scan;
+		    var res=[0];
+		    var cont =0;
+		  
+		  	//Esto es para descartar los casos sin coincidencias y a su vez para avanzar cuando la comparacion avance cuando esta misma falle
+		    Array.prototype.forEach.call(needle, function (char, i) {
+		        badMatchTable[char] = last - i;
+		    });
+
+		    //Ciclo para ir recorriendo el arreglo 
+		    while (offset <= maxOffset) {
+		    	//Se realiza la busqueda de derecha a izquierda
+		        for (scan=last; needle[scan] == haystack[scan+offset]; scan--) {
+		            if (scan == 0) {
+		              res[cont] = offset;
+		              cont++;
+		            }else if(offset==0)
+		            {
+		            	res[cont]=offset;
+		            	cont++;
+		            	offset = last+1;
+		            }
+		        }
+
+		        offset += badMatchTable[haystack[offset + last]] || last;
+		    }
+
+		    if(cont==0)
+		    {
+				return -1;
+		    }else
+		    {
+		    	return res;
+		    }
+		    
+		}
+
+		//Funcion sacada de internet
+		function buildPatternTable(word) {
+		  	const patternTable = [0];
+		  	let prefixIndex = 0;
+	  		let suffixIndex = 1;
+
+		  	while (suffixIndex < word.length) {
+		    	if (word[prefixIndex] === word[suffixIndex]) {
+		      		patternTable[suffixIndex] = prefixIndex + 1;
+		      		suffixIndex += 1;
+		      		prefixIndex += 1;
+		    	} else if (prefixIndex === 0) {
+		      		patternTable[suffixIndex] = 0;
+		      		suffixIndex += 1;
+		    	} else {
+		      	prefixIndex = patternTable[prefixIndex - 1];
+		    	}
+		  	}
+		  	return patternTable;
+		}
+
+		//FUNCION KMP scada de internet
+		function KMP(text, word) {
+			var res =[0];
+			var cont =0;
+
+		  	if (word.length === 0) {
+			    return 0;
+		  	}
+		  	let textIndex = 0;
+		  	let wordIndex = 0;
+
+		  	const patternTable = buildPatternTable(word);
+
+		  	while (textIndex < text.length) {
+			    if (text[textIndex] === word[wordIndex]) {
+			      	// We've found a match.
+			      	if (wordIndex === word.length - 1) {
+			        	res[cont] = (textIndex - word.length) + 1;
+			        	cont++;
+			      	}
+			      	wordIndex += 1;
+			      	textIndex += 1;
+			    } else if (wordIndex > 0) {
+			     	wordIndex = patternTable[wordIndex - 1];
+			    } else {
+			      	wordIndex = 0;
+			      	textIndex += 1;
+			    }
+			}
+			if(cont!=0)
+			{	
+				return res;
+			}else
+			{
+				return -1;
+			}
+			
+		}
+
+		function searchandreplace(array,valor,reemplazo)
+		{
+			//alert("Entre a la funcion ");
+			//Variables necesarias para la funcion
+			var cont=0;
+			var resultado=array;
+			var temp = [""];
+			var cambio = Array.from(reemplazo);
+			//Aqui mando a llamar la funcion que busca la palabra que vamos a reemplazar
+			var res = boyer(resultado,valor);
+			var ajuste=0;
+			var resta=0;
+			//ciclo para ajustar las posiciones a las diferencias de tamaño de la palabra
+			//Condicion si la palabra original es menor al cambio o viceversa
+			if(valor.length<reemplazo.length||valor.length>reemplazo.length)
+			{
+				ajuste = reemplazo.length-valor.length;
+			}else
+			{
+				ajuste=0;
+			}
+			//alert("Res: "+res);
+			var sal=ajuste;
+			resta+=sal;
+			//Ciclo para aplicar el ajuste a las posiciones
+			for(cont=1;cont<res.length;cont++)
+			{
+				res[cont]+=ajuste;
+				resta+=sal;
+				ajuste+=sal;
+			}
+			//alert("Res: "+res);
+			cont=0;
+
+			//ciclo que se repite hasta que no se encuentre la palabra
+			while(cont<res.length)
+			{
+				if(confirm("Quieres cambiar el valor en la posicion"+ res[cont] +"?"))
+				{
+					if(res[0]>=0)
+					{
+						//contadores para los ciclos
+						var z=res[cont]+valor.length
+						var y=0;
+						temp=[""];
+
+						//ciclo para copiar todo el arreglo que va despues de la palabra que vamos a copiar en un arreglo temporal
+						////resultado=[A,B,C,D,E,F]
+						/////BC por LAM
+						////temp =[D,E,F]
+						while(z<resultado.length)
+						{
+							temp[y]=resultado[z];
+							y++;
+							z++;
+						}
+						//alert("Temporal: "+temp);
+						//ciclo para insertar la nueva palabra en el arreglo final
+						////[A,L,A,M,E,F]
+						////Aqui se quito la letra D por ejemplo
+						z=res[cont];
+						for(y=0;y<cambio.length;y++)
+						{
+							resultado[z]=cambio[y];
+							z++;
+						}
+						//alert("Res temporal: "+resultado);
+						//ciclo para juntar los dos ciclos anteriores
+						////[A,L,A,M,D,E,F]
+						z=res[cont]+cambio.length;
+						for(y=0;y<temp.length;y++)
+						{
+							resultado[z]=temp[y];
+							z++;
+						}
+						//alert("Final: "+resultado);
+					}
+				}else
+				{
+					ajuste = reemplazo.length-valor.length;
+					var g=0;
+					for(g=cont+1;g<res.length;g++)
+					{
+						res[g]=res[g]-ajuste;
+					}
+				}
+				
+				cont++;
+			}
+			//alert("ya ordene todo el rollo");
+			//Esta condicion es para quitar el sobrante del arreglo en los 
+			//casos en los que la palabra a cambiar es mas grande que el reemplazo
+			if(resta<0)
+			{
+				//variables necesariass
+				temp=resultado;
+				resultado=[""];
+				cont=0;
+				//alert("Temp: "+temp+" \n Res: "+resultado);
+				//ciclo para recorrer el arreglo hasta la longitud menos el sobrante
+				while(cont<(temp.length+resta))
+				{
+					resultado[cont]=temp[cont];
+					//alert("Temp: "+temp+" \n Res: "+resultado);
+					cont++;
+				}
+			}
+			return resultado;
+		}
+
+	</script>
+</head>
+<body>
+	<div id="slide1" class="seccion1">
+		<div class="menu">
+			<ul class="submenu">
+				<li class="nav-item">
+					<a href="index.html">Home</a>
+				</li>
+				<li class="nav-item" >
+					<a href="#slide1">Boyer</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide2">KMP</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide3">Buscar y reemplazar</a>
+				</li>
+			</ul>
+		</div>
+		<div class="menu2">
+			<img src="imagenes/hamburger_icon.png" alt="hamburger_icon">
+			<div class="aparece">
+				<a href="index.html">Home</a>
+				<a href="#slide1.html">Boyer</a>
+				<a href="#slide2">KMP</a>
+				<a href="#slide3">Buscar y reemplazar</a>
+			</div>
+		</div>
+		<br><br>
+	</div>
+
+
+	<hr width=95% color="#000000" id="slide1">
+	<div id="Boyer">
+		<h1 class="center">Boyer</h1>
+		<div class="center">
+			<h3>Ingrese una sucesion de caracteres</h3>
+			<textarea id="txt-num1" name="" class="tam"></textarea>
+			<h3>Ingrese la subcadena a buscar</h3>
+			<input id="txt-num1-2" type="text" name="">
+			<input id="btn-boyer" type="button" onclick='fun(1);' name="" value="Boyer">
+		</div>
+	</div>
+
+
+	<hr width=95% color="#000000" id="slide2">
+	<div id="KMP">
+		<h1 class="center">KMP</h1>
+		<div class="center">
+			<h3>Ingrese una sucesion de caracteres</h3>
+			<textarea id="txt-num2" name="" class="tam"></textarea>
+			<h3>Ingrese la subcadena a buscar</h3>
+			<input id="txt-num2-2" type="text" name="">
+			<input id="btn-kmp" type="button" onclick='fun(2);' name="" value="KMP">
+		</div>
+	</div>
+
+	<hr width=95% color="#000000" id="slide3">
+	<div id="BYR">
+		<h1 class="center">Buscar y Remplazar</h1>
+		<div class="center">
+			<h3>Ingrese una sucesion de caracteres</h3>
+			<textarea id="txt-num3" name="" class="tam"></textarea>
+			<h3>Ingrese la subcadena a buscar</h3>
+			<input id="txt-num3-2" type="text" name="">
+			<h3>Ingrese la subcadena con la que sera reemplazada</h3>
+			<input id="txt-num3-3" type="text" name="">
+			<input id="btn-byr" type="button" onclick='fun(3);' name="" value="BYR">
+		</div>
+	</div>
+
+
+	<br><br><br>
+		<div class="footer">
+			copyright 2020
+		</div>
+
+</body>
+</html>

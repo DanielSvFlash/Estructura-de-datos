@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="estilos.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script src=//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.min.js></script>
+	<script type="text/javascript">
+		function fun(val)	
+		{
+			var num = $('#txt-num'+val).val();
+			var arr = num.split(",");
+
+			if(num!="")
+			{
+				switch(val)
+				{
+					case 1:
+
+						alert("Burbuja: "+burbuja(arr));
+					break;
+					case 2:
+
+						alert("Burbuja 2: "+burbuja2(arr));
+					break;
+					case 3:
+						alert("Selection: "+selectionSort(arr));
+					break;
+					case 4:
+						alert("Insertion: "+insertionSort(arr));
+					break;
+					case 5:
+						alert("Quick: "+quickSort(arr,0,arr.length-1));
+					break;
+					default:
+						alert("Algo anda mal");
+					break;
+				}				
+			}else
+			{
+				alert("Ingrese un valor");
+			}
+		}
+
+		function burbuja(arr)
+		{
+
+			for(var i=0;i<arr.length-1;i++)
+			{
+				//alert("Pasada #"+i);
+				for(var j=0;j<arr.length-1-i;j++)
+				{
+					if(parseInt(arr[j])>parseInt(arr[j+1]))
+					{
+						var temp= arr[j];
+						arr[j]=arr[j+1];
+						arr[j+1]=temp;
+						//alert(arr);
+					}
+				}
+			}
+			return arr;
+		}
+		function burbuja2(arr)
+		{
+
+			for(var i=0;i<arr.length-2-i;i++)
+			{
+				//alert("Pasada #"+i);
+				for(var j=i;j<arr.length-1-i;j++)
+				{
+					if(parseInt(arr[j])>parseInt(arr[j+1]))
+					{
+						var temp= arr[j];
+						arr[j]=arr[j+1];
+						arr[j+1]=temp;
+						//alert(arr);
+					}
+					if(parseInt(arr[arr.length-1-j])<parseInt(arr[arr.length-1-j-1]))
+					{
+						var temp= arr[arr.length-1-j];
+						arr[arr.length-1-j]=arr[arr.length-1-j-1];
+						arr[arr.length-1-j-1]=temp;
+						//alert(arr);
+					}
+
+				}
+			}
+			return arr;
+		}
+		function selectionSort(items)
+		{
+		    var len = items.length,min;
+		    for (i=0; i < len; i++){
+
+		        //set minimum to this position
+		        min = i;
+
+		        //check the rest of the array to see if anything is smaller
+		        for (j=i+1; j < len; j++){
+		            if (parseInt(items[j]) < parseInt(items[min])){
+		                min = j;
+		            }
+		        }
+
+		        //if the minimum isn't in the position, swap it
+		        if (i != min){
+		             var temp = items[i];
+				    items[i] = items[min];
+				    items[min] = temp;
+				    //alert(items);
+		        }
+		    }
+
+		    return items;
+		}
+		function insertionSort(arr)
+		{
+		  for (let i = 1; i < arr.length; i++) {
+		    let j = i - 1;
+		    let tmp = arr[i];
+		    while (j >= 0 && arr[j] > tmp) {
+		      arr[j + 1] = arr[j];
+		      j--;
+		    }
+		    arr[j+1] = tmp;
+		  }
+		  return arr;
+		}
+
+		function swap(items, leftIndex, rightIndex){
+		    var temp = items[leftIndex];
+		    items[leftIndex] = items[rightIndex];
+		    items[rightIndex] = temp;
+		}
+		function partition(items, left, right) {
+		    var pivot   = items[Math.floor((right + left) / 2)], //middle element
+		        i       = left, //left pointer
+		        j       = right; //right pointer
+		    while (i <= j) {
+		        while (parseInt(items[i]) < pivot) {
+		            i++;
+		        }
+		        while (parseInt(items[j]) > pivot) {
+		            j--;
+		        }
+		        if (i <= j) {
+		            swap(items, i, j); //sawpping two elements
+		            i++;
+		            j--;
+		        }
+		    }
+		    return i;
+		}
+
+		function quickSort(items, left, right) {
+
+		    var index;
+		    if (items.length > 1) {
+		        index = partition(items, left, right); //index returned from partition
+		        if (left < index - 1) { //more elements on the left side of the pivot
+		            quickSort(items, left, index - 1);
+		        }
+		        if (index < right) { //more elements on the right side of the pivot
+		            quickSort(items, index, right);
+		        }
+		    }
+		    return items;
+		}
+
+		function compare(val)
+		{
+			var semilla = $('#txt-num6').val();
+			//alert(window.performance.timing.navigationStart + window.performance.now());
+			//alert(window.performance.timing.navigationStart + window.performance.now());
+			if(isNaN(semilla))
+			{
+				Math.seedrandom(semilla);
+				var w=0;
+				var array = [""];
+				while(w<=val)
+				{
+					array.push(Math.floor(Math.random() * 10000));
+					w++;
+				}
+
+				var inicio = window.performance.now();
+				burbuja(array.slice());
+				contar();
+				var fin = window.performance.now();
+				var total =parseInt(fin)-parseInt(inicio);
+				$("#tabla").append("<tr><td>Burbuja</td><td>"+val+"</td><td>"+total+"</td></tr>");
+
+				inicio = window.performance.now();
+				burbuja2(array.slice());
+				contar();
+				fin = window.performance.now();
+				total =parseInt(fin)-parseInt(inicio);
+				$("#tabla").append("<tr><td>Burbuja2</td><td>"+val+"</td><td>"+total+"</td></tr>");
+
+				inicio = window.performance.now();
+				selectionSort(array.slice());
+				contar();
+				fin = window.performance.now();
+				total =parseInt(fin)-parseInt(inicio);
+				$("#tabla").append("<tr><td>Selection</td><td>"+val+"</td><td>"+total+"</td></tr>");
+
+				inicio = window.performance.now();
+				insertionSort(array.slice());
+				contar();
+				fin = window.performance.now();
+				total =parseInt(fin)-parseInt(inicio);
+				$("#tabla").append("<tr><td>Insertion</td><td>"+val+"</td><td>"+total+"</td></tr>");
+
+				inicio = window.performance.now();
+				quickSort(array.slice());
+				contar();
+				fin = window.performance.now();
+				total =parseInt(fin)-parseInt(inicio);
+				$("#tabla").append("<tr><td>Quick</td><td>"+val+"</td><td>"+total+"</td></tr>");
+
+
+				$("#tabla").append("<tr><td>--------</td><td>--------</td><td>--------</td></tr>");
+
+			}else{
+				alert("Ingresa un string");
+			}
+			
+
+		}
+
+		function contar()
+		{
+			var x=0;
+			while(x<100000000)
+			{
+				x++;
+			}
+		}
+
+
+	</script>
+</head>
+<body>
+	<div id="slide1" class="seccion1">
+		<div class="menu">
+			<ul class="submenu">
+				<li class="nav-item">
+					<a href="index.html">Home</a>
+				</li>
+				<li class="nav-item" >
+					<a href="recursividad.html">Recursividad</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide1">Bubble Sort</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide2">Bubble Sort doble</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide3">Selection Sort</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide4">Insertion Sort</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide5">Quick Sort</a>
+				</li>
+				<li class="nav-item">
+					<a href="#slide6">Comparing Sorts</a>
+				</li>
+			</ul>
+		</div>
+		<div class="menu2">
+			<img src="imagenes/hamburger_icon.png" alt="hamburger_icon">
+			<div class="aparece">
+				<a href="index.html">Home</a>
+				<a href="recursividad.html">Recursividad</a>
+				<a href="#slide1">Bubble Sort</a>
+				<a href="#slide2">Bubble Sort Doble</a>
+				<a href="#slide3">Selection Sort</a>
+				<a href="#slide4">Insertion Sort</a>
+				<a href="#slide5">Quick Sort</a>
+				<a href="#slide6">Comparing Sorts</a>
+			</div>
+		</div>
+		<br><br>
+	</div>
+
+	<hr width=95% color="#000000" id="slide1">
+	<div id="Bubble">
+		<h1 class="center">Bubble Sort</h1>
+		<div class="center">
+			<h3>Ingrese una sucesion de numeros separados por comas</h3>
+			<input id="txt-num1" type="text" name="">
+			<input id="btn-bubble" type="button" onclick='fun(1);' name="" value="Burbuja">
+		</div>
+	</div>
+	<hr width=95% color="#000000" id="slide2">
+	<div id="Bubble">
+		<h1 class="center">Bubble Sort Doble</h1>
+		<div class="center">
+			<h3>Ingrese una sucesion de numeros separados por comas</h3>
+			<input id="txt-num2" type="text" name="">
+			<input id="btn-bubble2" type="button" onclick='fun(2);' name="" value="Burbuja 2">
+		</div>
+	</div>
+	<hr width=95% color="#000000" id="slide3">
+	<div id="selction">
+		<h1 class="center">Selection sort</h1>
+		<div class="center">
+			<h3>Ingrese una sucesion de numeros separados por comas</h3>
+			<input id="txt-num3" type="text" name="">
+			<input id="btn-selection" type="button" onclick='fun(3);' name="" value="Selection">
+		</div>
+	</div>
+	<hr width=95% color="#000000" id="slide4">
+	<div id="insetion">
+		<h1 class="center">Insertion sort</h1>
+		<div class="center">
+			<h3>Ingrese una sucesion de numeros separados por comas</h3>
+			<input id="txt-num4" type="text" name="">
+			<input id="btn-insertion" type="button" onclick='fun(4);' name="" value="Insertion">
+		</div>
+	</div>
+	<hr width=95% color="#000000" id="slide5">
+	<div id="quick">
+		<h1 class="center">Quick sort</h1>
+		<div class="center">
+			<h3>Ingrese una sucesion de numeros separados por comas</h3>
+			<input id="txt-num5" type="text" name="">
+			<input id="btn-quick" type="button" onclick='fun(5);' name="" value="Quick">
+		</div>
+	</div>
+
+	<hr width=95% color="#000000" id="slide6">
+	<div id="compare">
+		<h1 class="center">Comparing Sorts</h1>
+		<div class="center">
+			<h3>Ingrese la semilla (String)</h3>
+			<input id="txt-num6" type="text" name="">
+			<br><br>
+			<input id="btn-compare1" type="button" onclick='compare(100);' name="" value="Comparar 100">
+			<input id="btn-compare2" type="button" onclick='compare(1000);' name="" value="Comparar 1000">
+			<input id="btn-compare3" type="button" onclick='compare(10000);' name="" value="Comparar 10000">
+			<input id="btn-compare4" type="button" onclick='compare(20000);' name="" value="Comparar 20000">
+		</div>
+		<div class="treinta">
+		 	<table style="width:100%" id="tabla">
+			  	<tr>
+			    	<th>Sort</th>
+				    <th>Amount</th>
+				    <th>Time</th>
+			  	</tr>
+			</table> 
+		</div>
+	</div>
+	<br><br><br><br>
+	<div class="footer">
+		copyright 2020
+	</div>
+
+</body>
+</html>

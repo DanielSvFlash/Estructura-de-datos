@@ -1,0 +1,224 @@
+body
+{
+	margin: 0px;
+	padding: 0px;
+}
+.menu
+{
+	width: 100%;
+	display: flex;
+	position: fixed;
+	background-color: black;
+}
+
+.submenu
+{
+	width: 100%;
+	margin-right: 5%;
+	display: flex;
+}
+.submenu div
+{
+	padding-top: 3%;
+	width: 100%;
+	border-width: 10px;
+	text-align: center;
+	font-size: 20px;
+}
+.icono
+{
+	width: 70px;
+	height: 70px;
+}
+#icono
+{
+	width: 20px;
+	height: 20px;
+}
+.nav-list
+{
+	padding:5px;
+	width: 100%;
+	margin: 0px;
+	background-color: black;
+	height:5%;
+	display: flex;
+	text-align: center;
+	position: fixed;
+	z-index: 1000000000000000000000000000000000000000000;
+}
+.nav-item
+{
+	text-align: center;
+	font-size: 20px;
+	width: 20%;
+	padding: 0px;
+	list-style: none;
+	margin: 0px;
+}
+.nav-item2
+{
+	text-align: center;
+	font-size: 20px;
+	width: 33%;
+	padding: 0px;
+	list-style: none;
+	margin: 0px;
+}
+.nav-item a
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	text-align: center;
+	color: white;
+	font-size: 20px;
+	text-decoration: none;
+}
+.nav-item a:hover
+{
+	background-color: white;
+	color: black;
+}
+.nav-item2 a
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	text-align: center;
+	color: white;
+	font-size: 20px;
+	text-decoration: none;
+}
+.nav-item2 a:hover
+{
+	background-color: white;
+	color: black;
+}
+.menu2
+{
+	width: 100%;
+	text-align: right;
+	display: none;
+	height: 10%;
+	position: fixed;
+	z-index: 1000000;	
+	background-color: black;
+}
+.menu2 img
+{
+	margin-bottom: 0px;
+	padding-top: 10px;
+	margin-right: 20px;
+	height: 30px;
+	width: 30px;
+}
+.menu2:hover >.aparece
+{
+	display: block;
+	position: absolute;
+}
+.aparece
+{
+	margin-right: 20px;
+	display: none;
+	text-align: center;
+	color: #FFFFFF;
+	width: 100%;
+	background-color: #000000;
+	opacity: 0.6;
+	position: relative;
+	z-index: 1000000000;
+	position: fixed;
+	z-index: 100000;
+}
+.aparece a
+{
+	width: 100%;
+	text-decoration: none;
+	color: white;
+	opacity: 1000;
+	text-align: center;
+	display: flex;
+	font-size: 20px;
+}
+.aparece a:hover
+{
+	background-color: white;
+	color: #008eff;
+}
+@media (max-width: 1200px)
+{
+	.menu2
+	{
+		display: block;
+	}
+	.menu
+	{
+		display: none;
+	}
+}
+
+
+
+
+
+.footer
+{
+	padding-top:10px; 
+	text-align: center;
+	width: 100%;
+	height: 30px;
+	background-color: black;
+	color:white;
+}
+
+.center
+{
+	text-align: center;
+}
+.tabla
+{
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+}
+.tabla table
+{
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
+
+input[type=button]
+{
+	background-color: #008eff;
+	color: white;
+	border-width: 7px;
+	border-color: black;
+	font-size: 15px;
+	border-radius: 15px;
+}
+.auto
+{
+	padding-left: 15%;
+}
+.linea1
+{
+	display: flex;
+	width: 100%;
+}
+.linea1 div
+{
+	width: 50%;
+}
+
+.formulario
+{
+	display: none;
+}
+
+.hide
+{
+	display: none;
+}
